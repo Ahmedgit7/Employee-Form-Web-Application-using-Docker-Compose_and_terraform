@@ -1,0 +1,70 @@
+version: 0.2
+
+env:
+  secrets-manager:
+    AWS_ACCESS_KEY_ID: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:AWS_ACCESS_KEY_ID-qvW0sS:AWS_ACCESS_KEY_ID"
+    AWS_SECRET_ACCESS_KEY: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:AWS_SECRET_ACCESS_KEY-dcnvcq:AWS_SECRET_ACCESS_KEY"
+    AWS_DEFAULT_REGION: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:AWS_DEFAULT_REGION-pTbrIk:AWS_DEFAULT_REGION"
+    ACC_ID: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:ACC_ID-LHGLL0:ACC_ID"
+    ECR_REPO_URI: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:ECR_REPO_URI-tmCWzX:ECR_REPO_URI"
+    CLUSTER_NAME: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:CLUSTER_NAME-jjIpGQ:CLUSTER_NAME"
+    DOCKER_LOGIN: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:DOCKER_LOGIN-rTlCCt:DOCKER_LOGIN"
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 14
+    commands:
+      - echo Installing dependencies...
+      - cd app
+      - npm install
+      - cd ..
+      - sudo yum install docker -y
+      - sudo yum install gettext -y
+      - curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.23.15/2023-01-11/bin/linux/amd64/kubectl
+      - chmod +x kubectl
+      - sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+  pre_build:
+    commands:
+      - echo Pre-build steps...
+      - aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
+      - aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
+      - aws configure set default.region ${AWS_DEFAULT_REGION}
+      - aws sts get-caller-identity
+      - echo "------ logging into the ECR repo ------"
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 185633157927.dkr.ecr.ap-south-1.amazonaws.com
+
+  build:
+    commands:
+      - echo Build started on `date`
+      - cd app
+      - npm run build
+      - cd ..
+      - echo Building Docker image...
+      - docker login  -u ahmed7860 -p ${DOCKER_LOGIN}
+      - docker build -t my-app:latest ./app   # Assuming Dockerfile is in the root of 'app' directory
+      - echo Tagging Docker image...
+      - docker tag my-app:latest ${ECR_REPO_URI}:${CODEBUILD_BUILD_NUMBER}
+      - docker tag my-app:latest ${ECR_REPO_URI}:latest
+      - echo Pushing Docker image to ECR...
+      - docker push ${ECR_REPO_URI}:${CODEBUILD_BUILD_NUMBER}
+      - docker push ${ECR_REPO_URI}:latest
+
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Logging in to EKS...
+      - aws eks update-kubeconfig --name ${CLUSTER_NAME} --region ${AWS_DEFAULT_REGION}
+      - echo Writing image definitions file...
+      - printf '[{"name":"app","imageUri":"%s"}]' ${ECR_REPO_URI}:${CODEBUILD_BUILD_NUMBER} > imagedefinitions.json
+      - echo Changing the deployment.yaml file values...
+      - envsubst < deployment.yaml.tmp > deployment.yaml
+      - echo Applying the manifest files...
+      - kubectl apply -f mongo-deployment.yaml
+      - kubectl apply -f deployment.yaml
+
+artifacts:
+  files:
+    - imagedefinitions.json
+    - '**/*'

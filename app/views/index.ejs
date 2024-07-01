@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- Meta tags for character set, viewport, and compatibility -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- Page title -->
+    <title>Details Form</title>
+
+    <!-- Internal CSS styles -->
+    <style>
+        /* Styling for the body element */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        /* Styling for the header element */
+        header {
+            background-color: #3498db;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        /* Styling for the h1 element within the header */
+        h1 {
+            margin: 0;
+        }
+
+        /* Styling for the main content area */
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Styling for forms */
+        form {
+            margin-bottom: 20px;
+        }
+
+        /* Styling for labels within forms */
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        /* Styling for text inputs and text areas */
+        input[type="text"] {
+            width: calc(100% - 12px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* Styling for the dynamic role section */
+        .role-section {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        /* Styling for submit buttons */
+        input[type="submit"] {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Styling for submit buttons on hover */
+        input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header section with the application title -->
+    <header>
+        <h1>-----Minfy Technologies is Hiring! | "Candidate Details Form"-----</h1>
+    </header>
+
+    <!-- Main content section -->
+    <main>
+
+        <!-- Form for entering personal details -->
+        <form id="detailsForm" action="/submit" method="post">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" required>
+            <br>
+
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" required>
+            <br>
+
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" placeholder="Enter your email" required>
+            <br>
+
+            <label for="hobbies">Hobbies:</label>
+            <input type="text" id="hobbies" name="hobbies" placeholder="Enter your hobbies" required>
+            <br>
+
+            <!-- Dynamic role section -->
+            <div id="roleSectionContainer"></div>
+            <button type="button" onclick="addRoleSection()">Add Role</button>
+            <br>
+
+            <!-- Submit button for submitting personal details -->
+            <input type="submit" value="Submit">
+        </form>
+
+    </main>
+
+    <!-- JavaScript to handle dynamic role sections -->
+    <script>
+        function addRoleSection() {
+            const container = document.getElementById("roleSectionContainer");
+            const roleSection = document.createElement("div");
+            roleSection.className = "role-section";
+
+            roleSection.innerHTML = `
+                <label for="roleTitle">Role Title:</label>
+                <input type="text" name="roleTitle[]" placeholder="Enter role title" required>
+                <br>
+
+                <label for="roleDetails">Role Details:</label>
+                <input type="text" name="roleDetails[]" placeholder="Enter role details" required>
+                <br>
+            `;
+
+            container.appendChild(roleSection);
+        }
+    </script>
+
+</body>
+
+</html>
+
