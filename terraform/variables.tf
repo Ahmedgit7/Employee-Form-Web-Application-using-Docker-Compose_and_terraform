@@ -19,7 +19,7 @@ variable "github_owner" {
 variable "github_repo" {
   description = "GitHub repository name"
   type        = string
-  default     = "Employee-Form-Web-Application-using-Docker-Compose"  # Replace with your GitHub repository name
+  default     = "Employee-Form-Web-Application-using-Docker-Compose_and_terraform"  # Replace with your GitHub repository name
 }
 
 variable "github_branch" {
