@@ -30,7 +30,7 @@ output "codepipeline_name" {
 
 output "codebuild_project_name" {
   description = "The name of the CodeBuild project"
-  value       = aws_codebuild_project.example.name
+  value       = aws_codebuild_project.employee_codebuild.name
 }
 
 output "codepipeline_webhook_url" {
