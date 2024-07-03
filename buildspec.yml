@@ -2,13 +2,13 @@ version: 0.2
 
 env:
   secrets-manager:
-    AWS_ACCESS_KEY_ID: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:AWS_ACCESS_KEY-nunkBq:AWS_ACCESS_KEY"
-    AWS_SECRET_ACCESS_KEY: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:AWS_SECRET_ACCESS-5dZLLf:AWS_SECRET_ACCESS"
-    AWS_DEFAULT_REGION: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:AWS_DEFAULT_REGION_1-rjJFxg:AWS_DEFAULT_REGION_1"
-    ACC_ID: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:ACCOUNT_ID-iRuJEp:ACCOUNT_ID"
-    ECR_REPO_URI: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:ECR_REPO-6xayKO:ECR_REPO"
+    AWS_ACCESS_KEY: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:AWS_ACCESS_KEY-nunkBq:AWS_ACCESS_KEY"
+    AWS_SECRET_ACCESS: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:AWS_SECRET_ACCESS-5dZLLf:AWS_SECRET_ACCESS"
+    AWS_DEFAULT_REGION_1: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:AWS_DEFAULT_REGION_1-rjJFxg:AWS_DEFAULT_REGION_1"
+    ACCOUNT_ID: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:ACCOUNT_ID-iRuJEp:ACCOUNT_ID"
+    ECR_REPO: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:ECR_REPO-6xayKO:ECR_REPO"
     EKS_CLUSTER_NAME: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:EKS_CLUSTER_NAME-vwDrE6:EKS_CLUSTER_NAME"
-    DOCKER_LOGIN: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:DOCKER_LOGIN_COMMAND-Ohuy9m:DOCKER_LOGIN_COMMAND"
+    DOCKER_LOGIN_COMMAND: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:DOCKER_LOGIN_COMMAND-Ohuy9m:DOCKER_LOGIN_COMMAND"
 
 phases:
   install:
@@ -28,9 +28,9 @@ phases:
   pre_build:
     commands:
       - echo Pre-build steps...
-      - aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
-      - aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
-      - aws configure set default.region ${AWS_DEFAULT_REGION}
+      - aws configure set aws_access_key_id ${AWS_ACCESS_KEY}
+      - aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS}
+      - aws configure set default.region ${AWS_DEFAULT_REGION_1}
       - aws sts get-caller-identity
       - echo "------ logging into the ECR repo ------"
       - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 185633157927.dkr.ecr.ap-south-1.amazonaws.com
@@ -42,22 +42,22 @@ phases:
       - npm run build
       - cd ..
       - echo Building Docker image...
-      - docker login  -u ahmed7860 -p ${DOCKER_LOGIN}
+      - docker login  -u ahmed7860 -p ${DOCKER_LOGIN_COMMAND}
       - docker build -t my-app:latest ./app   # Assuming Dockerfile is in the root of 'app' directory
       - echo Tagging Docker image...
-      - docker tag my-app:latest ${ECR_REPO_URI}:${CODEBUILD_BUILD_NUMBER}
-      - docker tag my-app:latest ${ECR_REPO_URI}:latest
+      - docker tag my-app:latest ${ECR_REPO}:${CODEBUILD_BUILD_NUMBER}
+      - docker tag my-app:latest ${ECR_REPO}:latest
       - echo Pushing Docker image to ECR...
-      - docker push ${ECR_REPO_URI}:${CODEBUILD_BUILD_NUMBER}
-      - docker push ${ECR_REPO_URI}:latest
+      - docker push ${ECR_REPO}:${CODEBUILD_BUILD_NUMBER}
+      - docker push ${ECR_REPO}:latest
 
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Logging in to EKS...
-      - aws eks update-kubeconfig --name ${CLUSTER_NAME} --region ${AWS_DEFAULT_REGION}
+      - aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME} --region ${AWS_DEFAULT_REGION_1}
       - echo Writing image definitions file...
-      - printf '[{"name":"app","imageUri":"%s"}]' ${ECR_REPO_URI}:${CODEBUILD_BUILD_NUMBER} > imagedefinitions.json
+      - printf '[{"name":"app","imageUri":"%s"}]' ${ECR_REPO}:${CODEBUILD_BUILD_NUMBER} > imagedefinitions.json
       - echo Changing the deployment.yaml file values...
       - envsubst < deployment.yaml.tmp > deployment.yaml
       - echo Applying the manifest files...
