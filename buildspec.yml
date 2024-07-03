@@ -7,7 +7,7 @@ env:
     AWS_DEFAULT_REGION: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:AWS_DEFAULT_REGION_1-rjJFxg:AWS_DEFAULT_REGION_1"
     ACC_ID: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:ACCOUNT_ID-iRuJEp:ACCOUNT_ID"
     ECR_REPO_URI: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:ECR_REPO-6xayKO:ECR_REPO"
-    CLUSTER_NAME: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:CLUSTER_NAME-jjIpGQ:CLUSTER_NAME"
+    EKS_CLUSTER_NAME: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:EKS_CLUSTER_NAME-vwDrE6:EKS_CLUSTER_NAME"
     DOCKER_LOGIN: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:DOCKER_LOGIN_COMMAND-Ohuy9m:DOCKER_LOGIN_COMMAND"
 
 phases:
