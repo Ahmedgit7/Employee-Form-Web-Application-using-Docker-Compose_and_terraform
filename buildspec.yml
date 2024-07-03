@@ -2,13 +2,13 @@ version: 0.2
 
 env:
   secrets-manager:
-    AWS_ACCESS_KEY_ID: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:AWS_ACCESS_KEY_ID-qvW0sS:AWS_ACCESS_KEY_ID"
-    AWS_SECRET_ACCESS_KEY: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:AWS_SECRET_ACCESS_KEY-dcnvcq:AWS_SECRET_ACCESS_KEY"
-    AWS_DEFAULT_REGION: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:AWS_DEFAULT_REGION-pTbrIk:AWS_DEFAULT_REGION"
-    ACC_ID: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:ACC_ID-LHGLL0:ACC_ID"
-    ECR_REPO_URI: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:ECR_REPO_URI-tmCWzX:ECR_REPO_URI"
+    AWS_ACCESS_KEY_ID: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:AWS_ACCESS_KEY-nunkBq:AWS_ACCESS_KEY"
+    AWS_SECRET_ACCESS_KEY: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:AWS_SECRET_ACCESS-5dZLLf:AWS_SECRET_ACCESS"
+    AWS_DEFAULT_REGION: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:AWS_DEFAULT_REGION_1-rjJFxg:AWS_DEFAULT_REGION_1"
+    ACC_ID: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:ACCOUNT_ID-iRuJEp:ACCOUNT_ID"
+    ECR_REPO_URI: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:ECR_REPO-6xayKO:ECR_REPO"
     CLUSTER_NAME: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:CLUSTER_NAME-jjIpGQ:CLUSTER_NAME"
-    DOCKER_LOGIN: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:DOCKER_LOGIN-rTlCCt:DOCKER_LOGIN"
+    DOCKER_LOGIN: "arn:aws:secretsmanager:ap-south-1:185633157927:secret:DOCKER_LOGIN_COMMAND-Ohuy9m:DOCKER_LOGIN_COMMAND"
 
 phases:
   install:
