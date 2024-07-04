@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: my-app
-        image: ${ECR_REPO_URI}:${CODEBUILD_BUILD_NUMBER}
+        image: ${ECR_REPO}:${CODEBUILD_BUILD_NUMBER}
         ports:
         - containerPort: 3000
 ---
