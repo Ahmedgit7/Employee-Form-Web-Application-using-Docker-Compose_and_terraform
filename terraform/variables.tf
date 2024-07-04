@@ -118,3 +118,31 @@ variable "vpc_cidr_block" {
   description = "CIDR block for the VPC"
   type        = string
 }
+
+variable "cluster_name" {
+  type = string
+}
+
+variable "region" {
+  type = string
+}
+
+variable "node_instance_type" {
+  type = string
+}
+
+variable "desired_capacity" {
+  type = number
+}
+
+variable "max_size" {
+  type = number
+}
+
+variable "min_size" {
+  type = number
+}
+
+variable "eks_addons" {
+  type = map(string)
+}

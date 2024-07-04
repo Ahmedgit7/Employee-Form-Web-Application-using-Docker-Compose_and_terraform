@@ -45,4 +45,8 @@ resource "aws_codepipeline" "example" {
       }
     }
   }
+  depends_on = [
+    aws_eks_cluster.employee-cluster,
+    aws_eks_node_group.demo
+  ]
 }
